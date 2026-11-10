@@ -11,7 +11,7 @@ def q_search(query):
     if query.isdigit() and len(query) <= 5:
         return Products.objects.filter(id=int(query))
 
-    tokens = query.split()
+    tokens = [token for token in query.split() if len(token) >= 2]
     if not tokens:
         return Products.objects.none()
 
