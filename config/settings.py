@@ -10,8 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
+# Windows Smart App Control блокирует DLL из пакета psycopg-binary,
+# поэтому psycopg работает в pure-python режиме и использует libpq.dll
+# из установленного PostgreSQL. Добавляем его папку bin в PATH процесса.
+PG_BIN_DIR = os.environ.get('PG_BIN_DIR', r'D:\PostgreSQL\bin')
+if os.name == 'nt' and os.path.isdir(PG_BIN_DIR):
+    os.environ['PATH'] = PG_BIN_DIR + os.pathsep + os.environ.get('PATH', '')
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
