@@ -47,4 +47,4 @@ def product(request, product_slug):
         "product": product,
     }
 
-    return render(request, "goods/product.html", context=context)
+    return render(request, "goods/product.html", context)
