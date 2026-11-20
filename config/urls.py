@@ -30,6 +30,9 @@ urlpatterns = [
     path("orders/", include("orders.urls", namespace="orders")),
 ]
 
+# Власна сторінка 404 для неіснуючих адрес (працює при DEBUG = False)
+handler404 = "main.views.page_not_found"
+
 if settings.DEBUG:
     urlpatterns += [path("__debug__/", include("debug_toolbar.urls"))]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
