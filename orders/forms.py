@@ -3,6 +3,7 @@ import re
 from django import forms
 
 
+# Форма оформлення замовлення.
 class CreateOrderForm(forms.Form):
     first_name = forms.CharField()
     last_name = forms.CharField()
@@ -21,6 +22,7 @@ class CreateOrderForm(forms.Form):
         ],
     )
 
+    # Перевіряє, що номер телефону складається рівно з 10 цифр.
     def clean_phone_number(self):
         data = self.cleaned_data["phone_number"]
 

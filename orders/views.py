@@ -12,17 +12,20 @@ from orders.forms import CreateOrderForm
 from orders.models import Order, OrderItem
 
 
+# Контролер оформлення замовлення для авторизованого користувача.
 class CreateOrderView(LoginRequiredMixin, FormView):
     template_name = 'orders/create_order.html'
     form_class = CreateOrderForm
     success_url = reverse_lazy('users:profile')
 
+    # Заповнює форму ім'ям і прізвищем користувача.
     def get_initial(self):
         initial = super().get_initial()
         initial['first_name'] = self.request.user.first_name
         initial['last_name'] = self.request.user.last_name
         return initial
 
+    # Створює замовлення з товарів кошика, зменшує залишки і очищує кошик.
     def form_valid(self, form):
         try:
             with transaction.atomic():
@@ -70,10 +73,12 @@ class CreateOrderView(LoginRequiredMixin, FormView):
             return redirect('orders:create_order')
         
     
+    # Показує помилку і повертає на сторінку оформлення.
     def form_invalid(self, form):
         messages.error(self.request, 'Заполните все обязательные поля!')
         return redirect('orders:create_order')
     
+    # Додає в контекст заголовок і позначку сторінки замовлення.
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Оформление заказа'

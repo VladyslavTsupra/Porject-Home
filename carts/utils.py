@@ -1,6 +1,7 @@
 from carts.models import Cart
 
 
+# Повертає кошики користувача або сесії, створюючи сесію за потреби.
 def get_user_carts(request):
     if request.user.is_authenticated:
         return Cart.objects.filter(user=request.user).select_related("product")

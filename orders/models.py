@@ -6,16 +6,20 @@ from goods.models import Products
 from users.models import User
 
 
+# Набір запитів товарів замовлення з підрахунком суми та кількості.
 class OrderItemQueryset(models.QuerySet):
+    # Повертає загальну вартість товарів замовлення.
     def total_price(self):
         return sum(cart.products_price() for cart in self)
 
+    # Повертає загальну кількість товарів замовлення.
     def total_quantity(self):
         if self:
             return sum(cart.quantity for cart in self)
         return 0
 
 
+# Замовлення користувача з даними доставки та оплати.
 class Order(models.Model):
     user = models.ForeignKey(
         to=User,
@@ -33,16 +37,19 @@ class Order(models.Model):
     is_paid = models.BooleanField(default=False, verbose_name="Оплачено")
     status = models.CharField(max_length=50, default="В обработке", verbose_name="Статус заказа")
 
+    # Задає назву таблиці, підписи моделі та сортування.
     class Meta:
         db_table: str = "order"
         verbose_name: str = "Заказ"
         verbose_name_plural: str = "Заказы"
         ordering = ("id",)
 
+    # Повертає опис замовлення для адмінки.
     def __str__(self) -> str:
         return f"Заказ № {self.pk} | Покупатель {self.user.first_name} {self.user.last_name}"
 
 
+# Товар у замовленні з ціною на момент покупки.
 class OrderItem(models.Model):
     order = models.ForeignKey(to=Order, on_delete=models.CASCADE, verbose_name="Заказ")
     product = models.ForeignKey(
@@ -53,6 +60,7 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(default=0, verbose_name="Количество")
     created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата продажи")
 
+    # Задає назву таблиці, підписи моделі та сортування.
     class Meta:
         db_table: str = "order_item"
         verbose_name: str = "Проданный товар"
@@ -61,8 +69,10 @@ class OrderItem(models.Model):
 
     objects = OrderItemQueryset.as_manager()
 
+    # Повертає вартість товару з урахуванням кількості.
     def products_price(self) -> Any:
         return round(self.price * self.quantity, 2)
 
+    # Повертає опис товару замовлення.
     def __str__(self) -> str:
         return f"Товар {self.name} | Заказ № {self.order.pk}"

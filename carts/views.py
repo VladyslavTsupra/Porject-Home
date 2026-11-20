@@ -10,7 +10,9 @@ from carts.utils import get_user_carts
 from goods.models import Products
 
 
+# Контролер додавання товару в кошик.
 class CartAddView(CartMixin, View):
+    # Збільшує кількість товару в кошику або створює новий запис.
     def post(self, request):
         product_id = request.POST.get("product_id")
         product = Products.objects.get(id=product_id)
@@ -34,7 +36,9 @@ class CartAddView(CartMixin, View):
 
 
 
+# Контролер зміни кількості товару в кошику.
 class CartChangeView(CartMixin, View):
+    # Оновлює кількість товару і повертає оновлений кошик.
     def post(self, request):
         cart_id = request.POST.get("cart_id")
         
@@ -54,7 +58,9 @@ class CartChangeView(CartMixin, View):
         return JsonResponse(response_data)
 
 
+# Контролер видалення товару з кошика.
 class CartRemoveView(CartMixin, View):
+    # Видаляє товар із кошика і повертає оновлений кошик.
     def post(self, request):
         cart_id = request.POST.get("cart_id")
         

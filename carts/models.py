@@ -4,16 +4,20 @@ from goods.models import Products
 from users.models import User
 
 
+# Набір запитів кошика з підрахунком загальної суми та кількості.
 class CartQueryset(models.QuerySet):
+    # Повертає загальну вартість усіх товарів у кошиках.
     def total_price(self):
         return sum(cart.products_price() for cart in self)
 
+    # Повертає загальну кількість товарів у кошиках.
     def total_quantity(self):
         if self:
             return sum(cart.quantity for cart in self)
         return 0
 
 
+# Товар у кошику авторизованого або анонімного користувача.
 class Cart(models.Model):
     user = models.ForeignKey(
         to=User, on_delete=models.CASCADE, blank=True, null=True, verbose_name="Пользователь"
@@ -23,6 +27,7 @@ class Cart(models.Model):
     session_key = models.CharField(max_length=32, null=True, blank=True)
     created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
 
+    # Задає назву таблиці, підписи моделі та сортування.
     class Meta:
         db_table = "cart"
         verbose_name = "Корзина"
@@ -31,9 +36,11 @@ class Cart(models.Model):
 
     objects = CartQueryset().as_manager()
 
+    # Повертає вартість товару з урахуванням кількості.
     def products_price(self):
         return round(self.product.sell_price() * self.quantity, 2)
 
+    # Повертає опис кошика для адмінки.
     def __str__(self) -> str:
         if self.user:
             return f"Корзина {self.user.username} | Товар {self.product.name} | Количество {self.quantity}"

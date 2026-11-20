@@ -15,17 +15,20 @@ from orders.models import Order, OrderItem
 from users.forms import ProfileForm, UserLoginForm, UserRegistrationForm
 
 
+# Контролер входу користувача.
 class UserLoginView(LoginView):
     template_name = 'users/login.html'
     form_class = UserLoginForm
     # success_ur = reverse_lazy('main:index')
     
+    # Повертає сторінку для переходу після входу.
     def get_success_url(self):
         redirect_page = self.request.POST.get('next', None)
         if redirect_page and redirect_page != reverse_lazy("user:logout"):
             return redirect_page
         return reverse_lazy('main:index')
     
+    # Авторизує користувача і переносить на нього кошик анонімної сесії.
     def form_valid(self, form):
         session_key = self.request.session.session_key
         
@@ -42,16 +45,19 @@ class UserLoginView(LoginView):
 
         return HttpResponseRedirect(self.get_success_url())
                         
+    # Додає в контекст заголовок сторінки.
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Home - Авторизация'
         return context
 
+# Контролер реєстрації користувача.
 class UserRegistrationVIew(CreateView):
     template_name = 'users/registration.html'
     form_class = UserRegistrationForm
     success_url = reverse_lazy('user:profile')
     
+    # Зберігає користувача, авторизує його і переносить кошик сесії.
     def form_valid(self, form):
         session_key = self.request.session.session_key
         user = form.save()
@@ -66,28 +72,34 @@ class UserRegistrationVIew(CreateView):
         messages.success(self.request, f"{user.username}, Ви успешно зарегитрировани и вошли в акаунт")
         return HttpResponseRedirect(self.get_success_url())
     
+    # Додає в контекст заголовок сторінки.
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Home - Регистрация'
         return context
 
 
+# Контролер особистого кабінету з редагуванням профілю.
 class UserProfileView(LoginRequiredMixin, CacheMixin , UpdateView):
     template_name = 'users/profile.html'
     form_class = ProfileForm
     success_url = reverse_lazy('users:profile')
 
+    # Повертає поточного користувача як об'єкт для редагування.
     def get_object(self, queryset=None):
         return self.request.user
     
+    # Показує повідомлення про успішне оновлення профілю.
     def form_valid(self, form):
         messages.success(self.request, "Профайл успешно обновлен")
         return super().form_valid(form)
     
+    # Показує повідомлення про помилку оновлення профілю.
     def form_invalid(self, form):
         messages.error(self.request, "Произошла ошибка")
         return super().form_invalid(form)
     
+    # Додає в контекст заголовок і закешовані замовлення користувача.
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Home - Кабинет'
@@ -103,14 +115,17 @@ class UserProfileView(LoginRequiredMixin, CacheMixin , UpdateView):
         context['orders'] = self.set_get_cache(orders, f"user_{self.request.user.id}_orders", 60)
         return context
 
+# Контролер сторінки кошика користувача.
 class UserCartView(TemplateView):
     template_name = 'users/users_cart.html'
 
+    # Додає в контекст заголовок сторінки.
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Home - Корзина'
         return context
 
+# Виходить з акаунта і перенаправляє на головну сторінку.
 @login_required
 def logout(request):
     messages.success(request, f"{request.user.username},Вы вышли из акаунта")
