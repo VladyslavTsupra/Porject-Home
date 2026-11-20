@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, TemplateView, UpdateView
+from common.mixins import CacheMixin
 
 from carts.models import Cart
 from orders.models import Order, OrderItem
@@ -71,10 +72,10 @@ class UserRegistrationVIew(CreateView):
         return context
 
 
-class UserProfileView(LoginRequiredMixin, UpdateView):
+class UserProfileView(LoginRequiredMixin, CacheMixin , UpdateView):
     template_name = 'users/profile.html'
     form_class = ProfileForm
-    success_url = reverse_lazy('user:profile')
+    success_url = reverse_lazy('users:profile')
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -99,7 +100,7 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
                 )
             ).order_by("-id")
 
-        context['orders'] = orders
+        context['orders'] = self.set_get_cache(orders, f"user_{self.request.user.id}_orders", 60)
         return context
 
 class UserCartView(TemplateView):
