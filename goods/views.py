@@ -7,7 +7,7 @@ from goods.models import Products
 from goods.utils import q_search
 
 
-# Контролер каталогу товарів з фільтрацією, сортуванням і пошуком.
+# Catalog view with filtering, sorting and search.
 class CatalogView(ListView):
     model = Products
     template_name = 'goods/catalog.html'
@@ -16,7 +16,7 @@ class CatalogView(ListView):
     allow_empty = False
     
     
-    # Повертає товари за категорією чи пошуковим запитом з урахуванням фільтрів.
+    # Returns products by category or search query, with filters applied.
     def get_queryset(self):
         category_slug = self.kwargs.get('category_slug')
         on_sale = self.request.GET.get("on_sale")
@@ -40,26 +40,26 @@ class CatalogView(ListView):
             
         return goods
    
-    # Додає в контекст заголовок і slug категорії.
+    # Adds the title and the category slug to the context.
     def get_context_data(self, **kwargs):
         context= super().get_context_data(**kwargs)
-        context['title'] = 'HOME - Каталог'
+        context['title'] = 'HOME - Catalog'
         context['slug_url'] = self.kwargs.get('category_slug')
         return context
 
-# Контролер сторінки окремого товару.
+# Single product page view.
 class ProductView(DetailView):
 
     template_name = 'goods/product.html'
     slug_url_kwarg = "product_slug"
     context_object_name = 'product'
     
-    # Повертає товар за slug з URL.
+    # Returns the product by the slug from the URL.
     def get_object(self, queryset = None):
         product = Products.objects.get(slug=self.kwargs.get(self.slug_url_kwarg))
         return product 
     
-    # Додає в контекст назву товару як заголовок.
+    # Adds the product name to the context as the title.
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
         context['title'] = self.object.name

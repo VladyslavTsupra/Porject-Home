@@ -25,26 +25,26 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_timestamp",
-                    models.DateTimeField(auto_now_add=True, verbose_name="Дата создания заказа"),
+                    models.DateTimeField(auto_now_add=True, verbose_name="Order date"),
                 ),
-                ("phone_number", models.CharField(max_length=20, verbose_name="Номер телефона")),
+                ("phone_number", models.CharField(max_length=20, verbose_name="Phone number")),
                 (
                     "requires_delivery",
-                    models.BooleanField(default=False, verbose_name="Требуется доставка"),
+                    models.BooleanField(default=False, verbose_name="Delivery required"),
                 ),
                 (
                     "delivery_address",
-                    models.TextField(blank=True, null=True, verbose_name="Адрес доставки"),
+                    models.TextField(blank=True, null=True, verbose_name="Delivery address"),
                 ),
                 (
                     "payment_on_get",
-                    models.BooleanField(default=False, verbose_name="Оплата при получении"),
+                    models.BooleanField(default=False, verbose_name="Payment on delivery"),
                 ),
-                ("is_paid", models.BooleanField(default=False, verbose_name="Оплачено")),
+                ("is_paid", models.BooleanField(default=False, verbose_name="Paid")),
                 (
                     "status",
                     models.CharField(
-                        default="В обработке", max_length=50, verbose_name="Статус заказа"
+                        default="Processing", max_length=50, verbose_name="Order status"
                     ),
                 ),
                 (
@@ -55,13 +55,13 @@ class Migration(migrations.Migration):
                         null=True,
                         on_delete=django.db.models.deletion.SET_DEFAULT,
                         to=settings.AUTH_USER_MODEL,
-                        verbose_name="Пользователь",
+                        verbose_name="User",
                     ),
                 ),
             ],
             options={
-                "verbose_name": "Заказ",
-                "verbose_name_plural": "Заказы",
+                "verbose_name": "Order",
+                "verbose_name_plural": "Orders",
                 "db_table": "order",
             },
         ),
@@ -74,19 +74,19 @@ class Migration(migrations.Migration):
                         auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
                     ),
                 ),
-                ("name", models.CharField(max_length=150, verbose_name="Название")),
-                ("price", models.DecimalField(decimal_places=2, max_digits=7, verbose_name="Цена")),
-                ("quantity", models.PositiveIntegerField(default=0, verbose_name="Количество")),
+                ("name", models.CharField(max_length=150, verbose_name="Name")),
+                ("price", models.DecimalField(decimal_places=2, max_digits=7, verbose_name="Price")),
+                ("quantity", models.PositiveIntegerField(default=0, verbose_name="Quantity")),
                 (
                     "created_timestamp",
-                    models.DateTimeField(auto_now_add=True, verbose_name="Дата продажи"),
+                    models.DateTimeField(auto_now_add=True, verbose_name="Date sold"),
                 ),
                 (
                     "order",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to="orders.order",
-                        verbose_name="Заказ",
+                        verbose_name="Order",
                     ),
                 ),
                 (
@@ -96,13 +96,13 @@ class Migration(migrations.Migration):
                         null=True,
                         on_delete=django.db.models.deletion.SET_DEFAULT,
                         to="goods.products",
-                        verbose_name="Продукт",
+                        verbose_name="Product",
                     ),
                 ),
             ],
             options={
-                "verbose_name": "Проданный товар",
-                "verbose_name_plural": "Проданные товары",
+                "verbose_name": "Sold item",
+                "verbose_name_plural": "Sold items",
                 "db_table": "order_item",
             },
         ),

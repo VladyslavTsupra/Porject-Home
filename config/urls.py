@@ -31,14 +31,14 @@ urlpatterns = [
     path("orders/", include("orders.urls", namespace="orders")),
 ]
 
-# Власна сторінка 404 для неіснуючих адрес (працює при DEBUG = False)
+# Custom 404 page for unknown URLs (works when DEBUG = False)
 handler404 = "main.views.page_not_found"
 
 if settings.DEBUG:
     urlpatterns += [path("__debug__/", include("debug_toolbar.urls"))]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 else:
-    # На безкоштовному хостингу немає окремого сервера для медіа, тож віддаємо їх через Django
+    # Free hosting has no separate media server, so Django serves media files
     urlpatterns += [
         re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
     ]

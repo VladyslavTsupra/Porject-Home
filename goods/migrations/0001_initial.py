@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 (
                     "name",
                     models.CharField(
-                        max_length=150, unique=True, verbose_name="Название категории"
+                        max_length=150, unique=True, verbose_name="Category name"
                     ),
                 ),
                 (
@@ -33,8 +33,8 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "verbose_name": "Категорию",
-                "verbose_name_plural": "Категории",
+                "verbose_name": "Category",
+                "verbose_name_plural": "Categories",
                 "db_table": "category",
             },
         ),
@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
                 (
                     "name",
                     models.CharField(
-                        max_length=150, unique=True, verbose_name="Название категории"
+                        max_length=150, unique=True, verbose_name="Product name"
                     ),
                 ),
                 (
@@ -59,38 +59,38 @@ class Migration(migrations.Migration):
                         blank=True, max_length=200, null=True, unique=True, verbose_name="URL"
                     ),
                 ),
-                ("description", models.TextField(blank=True, null=True, verbose_name="Описание")),
+                ("description", models.TextField(blank=True, null=True, verbose_name="Description")),
                 (
                     "image",
                     models.ImageField(
-                        blank=True, null=True, upload_to="goods_images", verbose_name="Изображение"
+                        blank=True, null=True, upload_to="goods_images", verbose_name="Image"
                     ),
                 ),
                 (
                     "price",
                     models.DecimalField(
-                        decimal_places=2, default=0.0, max_digits=7, verbose_name="Цена"
+                        decimal_places=2, default=0.0, max_digits=7, verbose_name="Price"
                     ),
                 ),
                 (
                     "discount",
                     models.DecimalField(
-                        decimal_places=2, default=0.0, max_digits=7, verbose_name="Скидка"
+                        decimal_places=2, default=0.0, max_digits=7, verbose_name="Discount"
                     ),
                 ),
-                ("quantity", models.PositiveIntegerField(default=0, verbose_name="Количество")),
+                ("quantity", models.PositiveIntegerField(default=0, verbose_name="Quantity")),
                 (
                     "category",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to="goods.categories",
-                        verbose_name="Категория",
+                        verbose_name="Category",
                     ),
                 ),
             ],
             options={
-                "verbose_name": "Продукт",
-                "verbose_name_plural": "Продукты",
+                "verbose_name": "Product",
+                "verbose_name_plural": "Products",
                 "db_table": "products",
                 "ordering": ("id",),
             },

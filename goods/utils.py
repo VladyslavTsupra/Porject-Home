@@ -7,7 +7,7 @@ from goods.models import Products
 MIN_SEARCH_RANK = 0.5
 
 
-# Шукає товари за id або за схожістю слів у назві та описі.
+# Searches products by id or by word similarity in the name and description.
 def q_search(query):
     if query.isdigit() and len(query) <= 5:
         return Products.objects.filter(id=int(query))

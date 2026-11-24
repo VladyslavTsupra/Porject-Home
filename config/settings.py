@@ -19,9 +19,9 @@ import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Налаштування беруться зі змінних оточення (на хостингу), локально діють значення за замовчуванням
+# Settings come from environment variables (on hosting); locally the defaults apply
 env = environ.Env()
-# Локально значення читаються з файлу .env (на хостингу його немає, там змінні задає Render)
+# Locally, values are read from the .env file (there is none on hosting, Render sets the variables there)
 environ.Env.read_env(BASE_DIR / ".env")
 
 
@@ -41,7 +41,7 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 
-# Render передає свій домен у цій змінній
+# Render passes its domain in this variable
 RENDER_EXTERNAL_HOSTNAME = env("RENDER_EXTERNAL_HOSTNAME", default="")
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
@@ -133,7 +133,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
-LANGUAGE_CODE = "ru"
+LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
 
@@ -179,7 +179,7 @@ LOGIN_URL = "/user/login/"
 LOGIN_REDIRECT_URL   = '/'
 
 
-# Debug toolbar підключається тільки локально
+# Debug toolbar is enabled only locally
 if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")
     MIDDLEWARE.insert(2, "debug_toolbar.middleware.DebugToolbarMiddleware")

@@ -4,45 +4,45 @@ from goods.models import Products
 from users.models import User
 
 
-# Набір запитів кошика з підрахунком загальної суми та кількості.
+# Cart queryset with total price and quantity helpers.
 class CartQueryset(models.QuerySet):
-    # Повертає загальну вартість усіх товарів у кошиках.
+    # Returns the total price of all products in the carts.
     def total_price(self):
         return sum(cart.products_price() for cart in self)
 
-    # Повертає загальну кількість товарів у кошиках.
+    # Returns the total quantity of products in the carts.
     def total_quantity(self):
         if self:
             return sum(cart.quantity for cart in self)
         return 0
 
 
-# Товар у кошику авторизованого або анонімного користувача.
+# Product in the cart of a logged-in or anonymous user.
 class Cart(models.Model):
     user = models.ForeignKey(
-        to=User, on_delete=models.CASCADE, blank=True, null=True, verbose_name="Пользователь"
+        to=User, on_delete=models.CASCADE, blank=True, null=True, verbose_name="User"
     )
-    product = models.ForeignKey(to=Products, on_delete=models.CASCADE, verbose_name="Товар")
-    quantity = models.PositiveSmallIntegerField(default=0, verbose_name="Количество")
+    product = models.ForeignKey(to=Products, on_delete=models.CASCADE, verbose_name="Product")
+    quantity = models.PositiveSmallIntegerField(default=0, verbose_name="Quantity")
     session_key = models.CharField(max_length=32, null=True, blank=True)
-    created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
+    created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Date added")
 
-    # Задає назву таблиці, підписи моделі та сортування.
+    # Sets the table name, model labels and ordering.
     class Meta:
         db_table = "cart"
-        verbose_name = "Корзина"
-        verbose_name_plural = "Корзина"
+        verbose_name = "Cart"
+        verbose_name_plural = "Cart"
         ordering = ("id",)
 
     objects = CartQueryset().as_manager()
 
-    # Повертає вартість товару з урахуванням кількості.
+    # Returns the product cost multiplied by the quantity.
     def products_price(self):
         return round(self.product.sell_price() * self.quantity, 2)
 
-    # Повертає опис кошика для адмінки.
+    # Returns the cart description for the admin.
     def __str__(self) -> str:
         if self.user:
-            return f"Корзина {self.user.username} | Товар {self.product.name} | Количество {self.quantity}"
+            return f"Cart {self.user.username} | Product {self.product.name} | Quantity {self.quantity}"
 
-        return f"Анонимная корзина | Товар {self.product.name} | Количество {self.quantity}"
+        return f"Anonymous cart | Product {self.product.name} | Quantity {self.quantity}"

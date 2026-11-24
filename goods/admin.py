@@ -3,7 +3,7 @@ from django.contrib import admin
 from goods.models import Categories, Products
 
 
-# Адмінка категорій з автозаповненням slug.
+# Categories admin with slug autofill.
 @admin.register(Categories)
 class CategoriesAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
@@ -12,7 +12,7 @@ class CategoriesAdmin(admin.ModelAdmin):
     ]
 
 
-# Адмінка товарів з пошуком, фільтрами та редагуванням знижки.
+# Products admin with search, filters and inline discount editing.
 @admin.register(Products)
 class ProductsAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}

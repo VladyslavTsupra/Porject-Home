@@ -1,38 +1,35 @@
 HOME
 
-Демо: https://home-shop-n997.onrender.com
-(безкоштовний хостинг, перше відкриття може тривати до хвилини)
+Live demo: https://home-shop-n997.onrender.com
+(free hosting, the first load can take up to a minute)
 
-Інтернет магазин меблів на джанго,
+A furniture online store built with Django.
 
-Що є:
-каталог з категоріями, фільтр по знижці, сортування по ціні і пагінація
-пошук по назві, опису або по id товару (через триграми в postgres)
-реєстрація, вхід, профіль з аватаркою і історією замовлень
-кошик на ajax, працює і без реєстрації, після входу кошик переноситься в акаунт
-оформлення замовлення з доставкою або самовивозом, перевіряє чи є товар на складі
-адмінка, там можна міняти товари, замовлення і текст на головній і на сторінці про нас
-кеш для меню категорій, замовлень і головної
-своя сторінка 404
+Features:
+- catalog with categories, discount filter, price sorting and pagination
+- search by name, description or product id (PostgreSQL trigrams)
+- registration, login, profile with avatar and order history
+- AJAX cart that works without registration; after login the cart moves to the account
+- checkout with delivery or pickup, with a stock check
+- admin panel to manage products, orders and the text on the home and About us pages
+- caching for the category menu, orders and the home page
+- custom 404 page
 
-Використав python 3.14, django 6.1, postgresql, bootstrap, jquery, uv, ruff, debug toolbar
+Stack: Python 3.14, Django 6.1, PostgreSQL, Bootstrap, jQuery, uv, ruff, Django Debug Toolbar
 
-Як запустити:
-треба postgres з базою home, юзер і пароль теж home (все в config/settings.py)
+How to run locally:
+you need PostgreSQL with a database named home (user and password are also home)
 
+cp .env.example .env    (then fill in your values)
 uv sync
 uv run python manage.py migrate
 uv run python manage.py loaddata fixtures/goods/categories.json fixtures/goods/products.json
 uv run python manage.py createsuperuser
 uv run python manage.py runserver
 
-потім відкрити http://127.0.0.1:8000, адмінка на /admin/
+then open http://127.0.0.1:8000, the admin panel is at /admin/
 
-картинки товарів лежать в media, вона в гіт не йде, тому їх треба закинути окремо
-
-
-
-Деплой (безкоштовно, без картки):
-база - Neon (neon.tech), сайт - Render (render.com), налаштування в render.yaml і build.sh
-на Render: New -> Blueprint -> цей репозиторій, вказати DATABASE_URL з Neon і пароль для адміна
-безкоштовний сервер засинає після 15 хв без запитів, перше відкриття займає ~1 хв
+Deployment (free, no credit card):
+database - Neon (neon.tech), web app - Render (render.com), configured in render.yaml and build.sh
+on Render: New -> Blueprint -> this repository, set DATABASE_URL from Neon and the admin password
+the free instance sleeps after 15 minutes without requests, so the first load takes about a minute

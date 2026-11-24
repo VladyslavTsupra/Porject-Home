@@ -2,78 +2,78 @@ from django.core.cache import cache
 from django.db import models
 
 
-# Абстрактна модель сторінки з одним записом, яка очищує свій кеш після змін.
+# Abstract single-record page model that clears its cache after changes.
 class SingletonPageModel(models.Model):
     cache_key = None
 
-    # Робить модель абстрактною, тому для неї не створюється таблиця.
+    # Makes the model abstract, so no table is created for it.
     class Meta:
         abstract = True
 
-    # Зберігає запис завжди з pk=1 і видаляє кеш сторінки.
+    # Always saves the record with pk=1 and clears the page cache.
     def save(self, *args, **kwargs):
         self.pk = 1
         super().save(*args, **kwargs)
         cache.delete(self.cache_key)
 
-    # Видаляє запис і кеш сторінки.
+    # Deletes the record and the page cache.
     def delete(self, *args, **kwargs):
         result = super().delete(*args, **kwargs)
         cache.delete(self.cache_key)
         return result
 
 
-# Вміст головної сторінки, який редагується в адмінці.
+# Home page content, editable in the admin.
 class IndexPage(SingletonPageModel):
     cache_key = "main_index_page"
 
     title = models.CharField(
         max_length=150,
-        default="Home - Главная страница",
-        verbose_name="Заголовок вкладки (title)",
+        default="Home - Main page",
+        verbose_name="Tab title",
     )
     content = models.CharField(
         max_length=255,
-        default="Добро пожаловать на главную страницу сайта Home",
-        verbose_name="Заголовок на странице",
+        default="Welcome to the Home main page",
+        verbose_name="Page heading",
     )
 
-    # Задає назву таблиці та підписи моделі в адмінці.
+    # Sets the table name and the model labels in the admin.
     class Meta:
         db_table = "index_page"
-        verbose_name = "Главная страница"
-        verbose_name_plural = "Главная страница"
+        verbose_name = "Main page"
+        verbose_name_plural = "Main page"
 
-    # Повертає назву запису для адмінки.
+    # Returns the record name for the admin.
     def __str__(self):
-        return "Главная страница"
+        return "Main page"
 
 
-# Вміст сторінки «О нас», який редагується в адмінці.
+# About us page content, editable in the admin.
 class AboutPage(SingletonPageModel):
     cache_key = "main_about_page"
 
     title = models.CharField(
         max_length=150,
-        default="Home - О нас",
-        verbose_name="Заголовок вкладки (title)",
+        default="Home - About us",
+        verbose_name="Tab title",
     )
     content = models.CharField(
         max_length=255,
-        default="О нас",
-        verbose_name="Заголовок на странице",
+        default="About us",
+        verbose_name="Page heading",
     )
     text_on_page = models.TextField(
-        default="Мы - команда профессионалов, которая занимается разработкой и продажей мебели.",
-        verbose_name="Текст на странице",
+        default="We are a team of professionals who design and sell furniture.",
+        verbose_name="Page text",
     )
 
-    # Задає назву таблиці та підписи моделі в адмінці.
+    # Sets the table name and the model labels in the admin.
     class Meta:
         db_table = "about_page"
-        verbose_name = "Страница «О нас»"
-        verbose_name_plural = "Страница «О нас»"
+        verbose_name = "About us page"
+        verbose_name_plural = "About us page"
 
-    # Повертає назву запису для адмінки.
+    # Returns the record name for the admin.
     def __str__(self):
-        return "Страница «О нас»"
+        return "About us page"

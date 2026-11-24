@@ -3,7 +3,7 @@ from django.contrib import admin
 from carts.models import Cart
 
 
-# Вбудована таблиця кошиків для сторінки користувача в адмінці.
+# Inline carts table for the user page in the admin.
 class CartTabAdmin(admin.TabularInline):
     model = Cart
     fields = ["product", "quantity", "created_timestamp"]
@@ -12,22 +12,22 @@ class CartTabAdmin(admin.TabularInline):
     extra = 1
 
 
-# Адмінка для перегляду і фільтрації кошиків.
+# Admin for viewing and filtering carts.
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
     list_display = ["user_display", "product_display", "quantity", "created_timestamp"]
     list_filter = ["created_timestamp", "user", "product__name"]
 
-    # Повертає ім'я користувача або позначку анонімного кошика.
+    # Returns the username or an anonymous cart label.
     def user_display(self, obj):
         if obj.user:
             return str(obj.user)
-        return "Анонимний пользователь"
+        return "Anonymous user"
 
-    # Повертає назву товару в кошику.
+    # Returns the name of the product in the cart.
     def product_display(self, obj):
         return str(obj.product.name)
 
     # user_display and product_display alter name of columns in admin panel
-    user_display.short_description = "Пользователь"
-    product_display.short_description = "Товар"
+    user_display.short_description = "User"
+    product_display.short_description = "Product"

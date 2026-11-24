@@ -3,7 +3,7 @@ import re
 from django import forms
 
 
-# Форма оформлення замовлення.
+# Checkout form.
 class CreateOrderForm(forms.Form):
     first_name = forms.CharField()
     last_name = forms.CharField()
@@ -22,15 +22,15 @@ class CreateOrderForm(forms.Form):
         ],
     )
 
-    # Перевіряє, що номер телефону складається рівно з 10 цифр.
+    # Checks that the phone number has exactly 10 digits.
     def clean_phone_number(self):
         data = self.cleaned_data["phone_number"]
 
         if not data.isdigit():
-            raise forms.ValidationError("Номер телефона должен содержать только цифри")
+            raise forms.ValidationError("Phone number must contain digits only")
 
         pattern = re.compile(r"^\d{10}$")
         if not pattern.match(data):
-            raise forms.ValidationError("Неверний формат номера")
+            raise forms.ValidationError("Invalid number format")
 
         return data

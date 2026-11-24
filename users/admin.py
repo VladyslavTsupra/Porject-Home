@@ -5,7 +5,7 @@ from orders.admin import OrderTabulareAdmin
 from users.models import User
 
 
-# Адмінка користувачів з їхніми кошиками та замовленнями.
+# Users admin with their carts and orders.
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ["username", "first_name", "last_name", "email"]

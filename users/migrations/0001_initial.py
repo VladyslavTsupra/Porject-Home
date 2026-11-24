@@ -84,7 +84,7 @@ class Migration(migrations.Migration):
                 (
                     "image",
                     models.ImageField(
-                        blank=True, null=True, upload_to="users_images", verbose_name="Аватар"
+                        blank=True, null=True, upload_to="users_images", verbose_name="Avatar"
                     ),
                 ),
                 (
@@ -111,8 +111,8 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "verbose_name": "Пользователя",
-                "verbose_name_plural": "Пользователи",
+                "verbose_name": "User",
+                "verbose_name_plural": "Users",
                 "db_table": "user",
             },
             managers=[

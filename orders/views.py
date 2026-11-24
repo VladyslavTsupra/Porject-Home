@@ -12,20 +12,20 @@ from orders.forms import CreateOrderForm
 from orders.models import Order, OrderItem
 
 
-# Контролер оформлення замовлення для авторизованого користувача.
+# Checkout view for a logged-in user.
 class CreateOrderView(LoginRequiredMixin, FormView):
     template_name = 'orders/create_order.html'
     form_class = CreateOrderForm
     success_url = reverse_lazy('users:profile')
 
-    # Заповнює форму ім'ям і прізвищем користувача.
+    # Prefills the form with the user's first and last name.
     def get_initial(self):
         initial = super().get_initial()
         initial['first_name'] = self.request.user.first_name
         initial['last_name'] = self.request.user.last_name
         return initial
 
-    # Створює замовлення з товарів кошика, зменшує залишки і очищує кошик.
+    # Creates the order from the cart, reduces stock and clears the cart.
     def form_valid(self, form):
         try:
             with transaction.atomic():
@@ -33,7 +33,7 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                 cart_items = Cart.objects.filter(user=user)
 
                 if cart_items.exists():
-                    # Создать заказ
+                    # Create the order
                     order = Order.objects.create(
                         user=user,
                         phone_number=form.cleaned_data['phone_number'],
@@ -41,7 +41,7 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                         delivery_address=form.cleaned_data['delivery_address'],
                         payment_on_get=form.cleaned_data['payment_on_get'],
                     )
-                    # Создать заказанные товары
+                    # Create the ordered items
                     for cart_item in cart_items:
                         product=cart_item.product
                         name=cart_item.product.name
@@ -50,8 +50,7 @@ class CreateOrderView(LoginRequiredMixin, FormView):
 
 
                         if product.quantity < quantity:
-                            raise ValidationError(f'Недостаточное количество товара {name} на складе\
-                                                       В наличии - {product.quantity}')
+                            raise ValidationError(f'Not enough {name} in stock. Available: {product.quantity}')
 
                         OrderItem.objects.create(
                             order=order,
@@ -63,25 +62,25 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                         product.quantity -= quantity
                         product.save()
 
-                    # Очистить корзину пользователя после создания заказа
+                    # Clear the user's cart after the order is created
                     cart_items.delete()
 
-                    messages.success(self.request, 'Заказ оформлен!')
+                    messages.success(self.request, 'Order placed!')
                     return redirect('user:profile')
         except ValidationError as e:
             messages.success(self.request, str(e))
             return redirect('orders:create_order')
         
     
-    # Показує помилку і повертає на сторінку оформлення.
+    # Shows an error and returns to the checkout page.
     def form_invalid(self, form):
-        messages.error(self.request, 'Заполните все обязательные поля!')
+        messages.error(self.request, 'Fill in all required fields!')
         return redirect('orders:create_order')
     
-    # Додає в контекст заголовок і позначку сторінки замовлення.
+    # Adds the title and the order page flag to the context.
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Оформление заказа'
+        context['title'] = 'Checkout'
         context['order'] = True
         return context
 

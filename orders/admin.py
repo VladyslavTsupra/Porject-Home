@@ -3,7 +3,7 @@ from django.contrib import admin
 from orders.models import Order, OrderItem
 
 
-# Вбудована таблиця товарів замовлення.
+# Inline table of order items.
 class OrderItemTabulareAdmin(admin.TabularInline):
     model = OrderItem
     fields = "product", "name", "price", "quantity"
@@ -14,7 +14,7 @@ class OrderItemTabulareAdmin(admin.TabularInline):
     extra = 0
 
 
-# Адмінка проданих товарів.
+# Sold items admin.
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = "order", "product", "name", "price", "quantity"
@@ -25,7 +25,7 @@ class OrderItemAdmin(admin.ModelAdmin):
     )
 
 
-# Вбудована таблиця замовлень для сторінки користувача в адмінці.
+# Inline orders table for the user page in the admin.
 class OrderTabulareAdmin(admin.TabularInline):
     model = Order
     fields = (
@@ -46,7 +46,7 @@ class OrderTabulareAdmin(admin.TabularInline):
     extra = 0
 
 
-# Адмінка замовлень з фільтрами і списком товарів.
+# Orders admin with filters and the item list.
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (

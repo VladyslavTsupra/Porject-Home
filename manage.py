@@ -5,7 +5,7 @@ import os
 import sys
 
 
-# Запускає адміністративні команди Django.
+# Runs Django administrative commands.
 def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")

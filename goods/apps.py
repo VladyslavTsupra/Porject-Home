@@ -1,8 +1,8 @@
 from django.apps import AppConfig
 
 
-# Конфігурація застосунку goods.
+# Config of the goods app.
 class GoodsConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "goods"
-    verbose_name = "Товары"
+    verbose_name = "Products"

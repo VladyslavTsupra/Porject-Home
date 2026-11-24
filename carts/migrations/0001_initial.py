@@ -25,19 +25,19 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "quantity",
-                    models.PositiveSmallIntegerField(default=0, verbose_name="Количество"),
+                    models.PositiveSmallIntegerField(default=0, verbose_name="Quantity"),
                 ),
                 ("session_key", models.CharField(blank=True, max_length=32, null=True)),
                 (
                     "created_timestamp",
-                    models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления"),
+                    models.DateTimeField(auto_now_add=True, verbose_name="Date added"),
                 ),
                 (
                     "product",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to="goods.products",
-                        verbose_name="Товар",
+                        verbose_name="Product",
                     ),
                 ),
                 (
@@ -47,13 +47,13 @@ class Migration(migrations.Migration):
                         null=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         to=settings.AUTH_USER_MODEL,
-                        verbose_name="Пользователь",
+                        verbose_name="User",
                     ),
                 ),
             ],
             options={
-                "verbose_name": "Корзина",
-                "verbose_name_plural": "Корзина",
+                "verbose_name": "Cart",
+                "verbose_name_plural": "Cart",
                 "db_table": "cart",
             },
         ),

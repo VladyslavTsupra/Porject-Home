@@ -10,9 +10,9 @@ from carts.utils import get_user_carts
 from goods.models import Products
 
 
-# Контролер додавання товару в кошик.
+# View that adds a product to the cart.
 class CartAddView(CartMixin, View):
-    # Збільшує кількість товару в кошику або створює новий запис.
+    # Increases the product quantity in the cart or creates a new record.
     def post(self, request):
         product_id = request.POST.get("product_id")
         product = Products.objects.get(id=product_id)
@@ -28,7 +28,7 @@ class CartAddView(CartMixin, View):
                                 product=product, quantity=1)
         
         response_data = {
-            "message": "Товар добавлен в корзину",
+            "message": "Product added to cart",
             'cart_items_html': self.render_cart(request)
         }
 
@@ -36,9 +36,9 @@ class CartAddView(CartMixin, View):
 
 
 
-# Контролер зміни кількості товару в кошику.
+# View that changes a product's quantity in the cart.
 class CartChangeView(CartMixin, View):
-    # Оновлює кількість товару і повертає оновлений кошик.
+    # Updates the product quantity and returns the updated cart.
     def post(self, request):
         cart_id = request.POST.get("cart_id")
         
@@ -50,7 +50,7 @@ class CartChangeView(CartMixin, View):
         quantity = cart.quantity
 
         response_data = {
-            "message": "Количество изменено",
+            "message": "Quantity changed",
             "quantity": quantity,
             'cart_items_html': self.render_cart(request)
         }
@@ -58,9 +58,9 @@ class CartChangeView(CartMixin, View):
         return JsonResponse(response_data)
 
 
-# Контролер видалення товару з кошика.
+# View that removes a product from the cart.
 class CartRemoveView(CartMixin, View):
-    # Видаляє товар із кошика і повертає оновлений кошик.
+    # Removes the product from the cart and returns the updated cart.
     def post(self, request):
         cart_id = request.POST.get("cart_id")
         
@@ -69,7 +69,7 @@ class CartRemoveView(CartMixin, View):
         cart.delete()
 
         response_data = {
-            "message": "Товар удален из корзины",
+            "message": "Product removed from cart",
             "quantity_deleted": quantity,
             'cart_items_html': self.render_cart(request)
         }

@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-# Конфігурація застосунку main.
+# Config of the main app.
 class MainConfig(AppConfig):
     name = "main"

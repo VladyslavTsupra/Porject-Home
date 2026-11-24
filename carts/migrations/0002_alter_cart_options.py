@@ -12,6 +12,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='cart',
-            options={'ordering': ('id',), 'verbose_name': 'Корзина', 'verbose_name_plural': 'Корзина'},
+            options={'ordering': ('id',), 'verbose_name': 'Cart', 'verbose_name_plural': 'Cart'},
         ),
     ]

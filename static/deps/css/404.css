@@ -1,4 +1,4 @@
-/* Сторінка 404: картка по центру екрана поверх фонового зображення */
+/* 404 page: card centered on the screen over the background image */
 .error-page {
   min-height: calc(100vh - 160px);
   display: flex;

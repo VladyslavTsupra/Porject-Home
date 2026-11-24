@@ -7,9 +7,9 @@
 {% endblock modal_cart %}
 
 {% block content %}
-    <!-- Контент на странице -->
+    <!-- Page content -->
     <div class="row">
-        <!-- Форма фильтров -->
+        <!-- Filters form -->
         <div class="dropdown mb-2">
             <button
                 class="btn btn-secondary dropdown-toggle btn-dark"
@@ -17,7 +17,7 @@
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
                 >
-                Фильтры
+                Filters
             </button>
 
             <form action="{% if request.GET.q %}{% url "catalog:search" %}{% else %}{% url "catalog:index" slug_url %}{% endif  %}" method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
@@ -34,11 +34,11 @@
                         <input type="hidden" name="q" value="{{ request.GET.q }}">
                     {% endif %}
                     <label class="form-check-label" for="flexCheckDefault">
-                        Товары по акции
+                        On sale
                     </label>
                 </div>
 
-                <p class="text-white mx-3 mt-3">Сортировать:</p>
+                <p class="text-white mx-3 mt-3">Sort by:</p>
 
                 <div class="form-check text-white mx-3">
                     <input
@@ -50,7 +50,7 @@
                         {% if not request.GET.order_by or request.GET.order_by == 'default' %}checked{% endif %}
                         >
                     <label class="form-check-label" for="flexRadioDefault1">
-                        По умолчанию
+                        Default
                     </label>
                 </div>
 
@@ -64,7 +64,7 @@
                         {% if request.GET.order_by == 'price' %}checked{% endif %}
                         >
                     <label class="form-check-label" for="flexRadioDefault2">
-                        От дешевых к дорогим
+                        Price: low to high
                     </label>
                 </div>
 
@@ -78,23 +78,23 @@
                         {% if request.GET.order_by == '-price' %}checked{% endif %}
                         >
                     <label class="form-check-label" for="flexRadioDefault3">
-                        От дорогих к дешевым
+                        Price: high to low
                     </label>
                 </div>
 
-                <button type="submit" class="btn btn-primary mx-3 mt-3">Применить</button>
+                <button type="submit" class="btn btn-primary mx-3 mt-3">Apply</button>
             </form>
         </div>
 
         {% if request.GET.q %}
-            <h3 class="mt-4">Результат поиска по запросу {{ request.GET.q }}</h3>
+            <h3 class="mt-4">Search results for {{ request.GET.q }}</h3>
             {% if not goods %}
                 <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css"%}">
-                <h2 class="mt-4">По запросу ничего не найдено</h2>
+                <h2 class="mt-4">Nothing found</h2>
             {% endif %}
         {% endif %}
         {% for product in goods %}
-            <!-- Карта товара -->
+            <!-- Product card -->
             <div class="col-lg-4 col-md-6 p-4">
                 <div class="card border-primary rounded custom-shadow">
                     {% if product.image %}
@@ -115,7 +115,7 @@
                             {% if product.discount %}
                                 <p><s>{{ product.price }}</s> $</p>
                                 <p><strong>{{ product.sell_price }} $</strong></p>
-                                <span class="badge bg-warning text-dark">Скидка {{ product.discount }} %</span>
+                                <span class="badge bg-warning text-dark">Discount {{ product.discount }} %</span>
                             {% else %}
                                 <p><strong>{{product.price}}</strong></p>
                             {% endif %}
@@ -137,7 +137,7 @@
 
     </div>
 
-    <!-- Пагинация -->
+    <!-- Pagination -->
     {% if is_paginated %}
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center my-4">
@@ -145,7 +145,7 @@
                     <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
                         <a class="page-link" href="{% if page_obj.has_previous %}?{% change_params page=page_obj.previous_page_number %}{% else %}
                             #
-                            {% endif %}">Назад</a>
+                            {% endif %}">Previous</a>
                     </li>
 
                     {% for page in page_obj.paginator.page_range %}
@@ -159,7 +159,7 @@
                     <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
                         <a class="page-link" href="{% if page_obj.has_next %}?{% change_params page=page_obj.next_page_number %}{% else %}
                             #
-                            {% endif %}">Следующая</a>
+                            {% endif %}">Next</a>
                     </li>
                 </div>
             </ul>

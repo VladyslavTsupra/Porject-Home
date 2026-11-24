@@ -6,73 +6,73 @@ from goods.models import Products
 from users.models import User
 
 
-# Набір запитів товарів замовлення з підрахунком суми та кількості.
+# Order items queryset with total price and quantity helpers.
 class OrderItemQueryset(models.QuerySet):
-    # Повертає загальну вартість товарів замовлення.
+    # Returns the total price of the order items.
     def total_price(self):
         return sum(cart.products_price() for cart in self)
 
-    # Повертає загальну кількість товарів замовлення.
+    # Returns the total quantity of the order items.
     def total_quantity(self):
         if self:
             return sum(cart.quantity for cart in self)
         return 0
 
 
-# Замовлення користувача з даними доставки та оплати.
+# User order with delivery and payment details.
 class Order(models.Model):
     user = models.ForeignKey(
         to=User,
         on_delete=models.SET_DEFAULT,
         blank=True,
         null=True,
-        verbose_name="Пользователь",
+        verbose_name="User",
         default=None,
     )
-    created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания заказа")
-    phone_number = models.CharField(max_length=20, verbose_name="Номер телефона")
-    requires_delivery = models.BooleanField(default=False, verbose_name="Требуется доставка")
-    delivery_address = models.TextField(null=True, blank=True, verbose_name="Адрес доставки")
-    payment_on_get = models.BooleanField(default=False, verbose_name="Оплата при получении")
-    is_paid = models.BooleanField(default=False, verbose_name="Оплачено")
-    status = models.CharField(max_length=50, default="В обработке", verbose_name="Статус заказа")
+    created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Order date")
+    phone_number = models.CharField(max_length=20, verbose_name="Phone number")
+    requires_delivery = models.BooleanField(default=False, verbose_name="Delivery required")
+    delivery_address = models.TextField(null=True, blank=True, verbose_name="Delivery address")
+    payment_on_get = models.BooleanField(default=False, verbose_name="Payment on delivery")
+    is_paid = models.BooleanField(default=False, verbose_name="Paid")
+    status = models.CharField(max_length=50, default="Processing", verbose_name="Order status")
 
-    # Задає назву таблиці, підписи моделі та сортування.
+    # Sets the table name, model labels and ordering.
     class Meta:
         db_table: str = "order"
-        verbose_name: str = "Заказ"
-        verbose_name_plural: str = "Заказы"
+        verbose_name: str = "Order"
+        verbose_name_plural: str = "Orders"
         ordering = ("id",)
 
-    # Повертає опис замовлення для адмінки.
+    # Returns the order description for the admin.
     def __str__(self) -> str:
-        return f"Заказ № {self.pk} | Покупатель {self.user.first_name} {self.user.last_name}"
+        return f"Order #{self.pk} | Customer {self.user.first_name} {self.user.last_name}"
 
 
-# Товар у замовленні з ціною на момент покупки.
+# Order item with the price at the time of purchase.
 class OrderItem(models.Model):
-    order = models.ForeignKey(to=Order, on_delete=models.CASCADE, verbose_name="Заказ")
+    order = models.ForeignKey(to=Order, on_delete=models.CASCADE, verbose_name="Order")
     product = models.ForeignKey(
-        to=Products, on_delete=models.SET_DEFAULT, null=True, verbose_name="Продукт", default=None
+        to=Products, on_delete=models.SET_DEFAULT, null=True, verbose_name="Product", default=None
     )
-    name = models.CharField(max_length=150, verbose_name="Название")
-    price = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Цена")
-    quantity = models.PositiveIntegerField(default=0, verbose_name="Количество")
-    created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата продажи")
+    name = models.CharField(max_length=150, verbose_name="Name")
+    price = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Price")
+    quantity = models.PositiveIntegerField(default=0, verbose_name="Quantity")
+    created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Date sold")
 
-    # Задає назву таблиці, підписи моделі та сортування.
+    # Sets the table name, model labels and ordering.
     class Meta:
         db_table: str = "order_item"
-        verbose_name: str = "Проданный товар"
-        verbose_name_plural: str = "Проданные товары"
+        verbose_name: str = "Sold item"
+        verbose_name_plural: str = "Sold items"
         ordering = ("id",)
 
     objects = OrderItemQueryset.as_manager()
 
-    # Повертає вартість товару з урахуванням кількості.
+    # Returns the product cost multiplied by the quantity.
     def products_price(self) -> Any:
         return round(self.price * self.quantity, 2)
 
-    # Повертає опис товару замовлення.
+    # Returns the order item description.
     def __str__(self) -> str:
-        return f"Товар {self.name} | Заказ № {self.order.pk}"
+        return f"Product {self.name} | Order #{self.order.pk}"

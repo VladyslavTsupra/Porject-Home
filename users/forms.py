@@ -6,9 +6,9 @@ from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, UserCr
 from users.models import User
 
 
-# Форма входу користувача.
+# User login form.
 class UserLoginForm(AuthenticationForm):
-    # Задає модель і поля форми.
+    # Sets the form model and fields.
     class Meta:
         model = User
         fields = ("username", "password")
@@ -17,9 +17,9 @@ class UserLoginForm(AuthenticationForm):
     password = forms.CharField()
 
 
-# Форма реєстрації нового користувача.
+# New user registration form.
 class UserRegistrationForm(UserCreationForm):
-    # Задає модель і поля форми.
+    # Sets the form model and fields.
     class Meta:
         model = User
         fields = (
@@ -39,9 +39,9 @@ class UserRegistrationForm(UserCreationForm):
     password2 = forms.CharField()
 
 
-# Форма редагування профілю користувача.
+# User profile edit form.
 class ProfileForm(UserChangeForm):
-    # Задає модель і поля форми.
+    # Sets the form model and fields.
     class Meta:
         model = User
         fields = (

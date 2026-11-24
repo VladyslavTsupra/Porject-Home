@@ -4,9 +4,9 @@ from carts.models import Cart
 from carts.utils import get_user_carts
 
 
-# Міксин зі спільною логікою пошуку і рендерингу кошика.
+# Mixin with shared logic for finding and rendering the cart.
 class CartMixin:
-    # Повертає кошик поточного користувача або сесії за товаром чи id.
+    # Returns the current user's or session's cart by product or id.
     def get_cart(self, request, product=None, cart_id=None):
 
         if request.user.is_authenticated:
@@ -21,7 +21,7 @@ class CartMixin:
 
         return Cart.objects.filter(**query_kwargs).first()
     
-    # Рендерить HTML кошика користувача для AJAX-відповіді.
+    # Renders the user's cart HTML for the AJAX response.
     def render_cart(self, request):
         user_cart = get_user_carts(request)
         context = {"carts": user_cart}

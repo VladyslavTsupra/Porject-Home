@@ -4,15 +4,15 @@ from django.views.generic import TemplateView
 
 from main.models import AboutPage, IndexPage
 
-PAGE_CACHE_TIME = 60 * 60  # 1 година; кеш також скидається при збереженні в адмінці
-NOT_FOUND_TITLE = "Home - Страница не найдена"
+PAGE_CACHE_TIME = 60 * 60  # 1 hour; the cache is also cleared when saving in the admin
+NOT_FOUND_TITLE = "Home - Page not found"
 
 
-# Міксин, який бере дані сторінки з кешу і звертається до БД лише за їх відсутності.
+# Mixin that takes page data from the cache and queries the DB only when it is missing.
 class PageCacheMixin:
     page_model = None
 
-    # Повертає запис сторінки з кешу або створює його зі значеннями за замовчуванням.
+    # Returns the page record from the cache or creates it with default values.
     def get_page(self):
         page = cache.get(self.page_model.cache_key)
         if page is None:
@@ -21,12 +21,12 @@ class PageCacheMixin:
         return page
 
 
-# Контролер головної сторінки.
+# Home page view.
 class IndexView(PageCacheMixin, TemplateView):
     template_name = "main/index.html"
     page_model = IndexPage
 
-    # Додає в контекст заголовок і текст головної сторінки.
+    # Adds the home page title and text to the context.
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         page = self.get_page()
@@ -35,12 +35,12 @@ class IndexView(PageCacheMixin, TemplateView):
         return context
 
 
-# Контролер сторінки «О нас».
+# About us page view.
 class AboutView(PageCacheMixin, TemplateView):
     template_name = "main/about.html"
     page_model = AboutPage
 
-    # Додає в контекст заголовок і текст сторінки «О нас».
+    # Adds the About us page title and text to the context.
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         page = self.get_page()
@@ -50,16 +50,16 @@ class AboutView(PageCacheMixin, TemplateView):
         return context
 
 
-# Контролер сторінок, які ще не готові, і показує для них сторінку 404.
+# View for pages that are not ready yet; shows the 404 page for them.
 class PageNotFoundView(TemplateView):
     template_name = "404.html"
     extra_context = {"title": NOT_FOUND_TITLE}
 
-    # Повертає сторінку 404 з відповідним HTTP-статусом.
+    # Returns the 404 page with the matching HTTP status.
     def get(self, request, *args, **kwargs):
         return self.render_to_response(self.get_context_data(**kwargs), status=404)
 
 
-# Обробник 404 для всіх неіснуючих адрес, коли DEBUG = False.
+# 404 handler for all unknown URLs when DEBUG = False.
 def page_not_found(request, exception):
     return render(request, "404.html", {"title": NOT_FOUND_TITLE}, status=404)

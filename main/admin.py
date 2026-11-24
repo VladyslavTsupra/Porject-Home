@@ -3,24 +3,24 @@ from django.contrib import admin
 from main.models import AboutPage, IndexPage
 
 
-# Адмінка сторінки, у якій можна лише редагувати єдиний запис.
+# Admin for a page where only the single record can be edited.
 class SingletonPageAdmin(admin.ModelAdmin):
-    # Дозволяє додати запис тільки тоді, коли його ще немає.
+    # Allows adding a record only when none exists yet.
     def has_add_permission(self, request):
         return not self.model.objects.exists()
 
-    # Забороняє видаляти запис сторінки.
+    # Forbids deleting the page record.
     def has_delete_permission(self, request, obj=None):
         return False
 
 
-# Адмінка для редагування головної сторінки.
+# Admin for editing the home page.
 @admin.register(IndexPage)
 class IndexPageAdmin(SingletonPageAdmin):
     list_display = ["title", "content"]
 
 
-# Адмінка для редагування сторінки «О нас».
+# Admin for editing the About us page.
 @admin.register(AboutPage)
 class AboutPageAdmin(SingletonPageAdmin):
     list_display = ["title", "content"]

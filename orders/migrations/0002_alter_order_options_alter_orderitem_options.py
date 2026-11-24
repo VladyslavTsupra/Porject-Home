@@ -12,10 +12,10 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='order',
-            options={'ordering': ('id',), 'verbose_name': 'Заказ', 'verbose_name_plural': 'Заказы'},
+            options={'ordering': ('id',), 'verbose_name': 'Order', 'verbose_name_plural': 'Orders'},
         ),
         migrations.AlterModelOptions(
             name='orderitem',
-            options={'ordering': ('id',), 'verbose_name': 'Проданный товар', 'verbose_name_plural': 'Проданные товары'},
+            options={'ordering': ('id',), 'verbose_name': 'Sold item', 'verbose_name_plural': 'Sold items'},
         ),
     ]
