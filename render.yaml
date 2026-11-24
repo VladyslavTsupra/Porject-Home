@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: home-shop
+    runtime: python
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: uv run gunicorn config.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.14.0
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: DJANGO_SUPERUSER_USERNAME
+        value: admin
+      - key: DJANGO_SUPERUSER_EMAIL
+        value: admin@example.com
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false

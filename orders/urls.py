@@ -1,4 +1,3 @@
-from debug_toolbar.urls import urlpatterns
 from django.urls import path
 
 from orders import views

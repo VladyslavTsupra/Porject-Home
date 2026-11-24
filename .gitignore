@@ -10,7 +10,9 @@ venv/
 
 # Django
 db.sqlite3
-media/
+media/*
+!media/goods_images/
+staticfiles/
 
 # Environment variables
 .env
