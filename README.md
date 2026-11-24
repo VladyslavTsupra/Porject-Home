@@ -32,7 +32,7 @@ uv run python manage.py runserver
 
 
 
-Деплой (безкоштовно, без картки):
+Деплой:
 база - Neon (neon.tech), сайт - Render (render.com), налаштування в render.yaml і build.sh
 на Render: New -> Blueprint -> цей репозиторій, вказати DATABASE_URL з Neon і пароль для адміна
 безкоштовний сервер засинає після 15 хв без запитів, перше відкриття займає ~1 хв
