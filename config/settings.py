@@ -21,6 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Налаштування беруться зі змінних оточення (на хостингу), локально діють значення за замовчуванням
 env = environ.Env()
+# Локально значення читаються з файлу .env (на хостингу його немає, там змінні задає Render)
+environ.Env.read_env(BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
