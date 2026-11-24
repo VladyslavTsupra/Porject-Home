@@ -3,6 +3,7 @@ services:
     name: home-shop
     runtime: python
     plan: free
+    region: frankfurt
     buildCommand: ./build.sh
     startCommand: uv run gunicorn config.wsgi:application
     envVars:
