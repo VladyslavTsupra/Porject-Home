@@ -31,5 +31,4 @@ then open http://127.0.0.1:8000, the admin panel is at /admin/
 
 Deployment:
 database - Neon (neon.tech), web app - Render (render.com), configured in render.yaml and build.sh
-on Render: New -> Blueprint -> this repository, set DATABASE_URL from Neon and the admin password
-the free instance sleeps after 15 minutes without requests, so the first load takes about a minute
+on Render: New -> Blueprint -> this repository
